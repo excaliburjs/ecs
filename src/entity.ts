@@ -90,17 +90,17 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
    */
   public id: number = Entity._ID++;
 
-  public name = `Entity#${this.id}`;
+  public name: string = `Entity#${this.id}`;
 
   /**
    * Listen to or emit events for an entity
    */
-  public events = new EventEmitter<EntityEvents>();
+  public events: EventEmitter<EntityEvents> = new EventEmitter<EntityEvents>();
   private _tags = new Set<string>();
-  public componentAdded$ = new Observable<Component>();
-  public componentRemoved$ = new Observable<Component>();
-  public tagAdded$ = new Observable<string>();
-  public tagRemoved$ = new Observable<string>();
+  public componentAdded$: Observable<Component> = new Observable<Component>();
+  public componentRemoved$: Observable<Component> = new Observable<Component>();
+  public tagAdded$: Observable<string> = new Observable<string>();
+  public tagRemoved$: Observable<string> = new Observable<string>();
   /**
    * Current components on the entity
    *
@@ -108,7 +108,7 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
    *
    * Use addComponent/removeComponent otherwise the ECS will not be notified of changes.
    */
-  public readonly components = new Map<Function, Component>();
+  public readonly components: Map<Function, Component> = new Map<Function, Component>();
   public componentValues: Component[] = [];
   private _componentsToRemove: ComponentCtor[] = [];
 
@@ -175,7 +175,7 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
     this.emit('kill', new KillEvent(this));
   }
 
-  public isKilled() {
+  public isKilled(): boolean {
     return !this.isActive;
   }
 
@@ -265,8 +265,8 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
     return this._parent;
   }
 
-  public childrenAdded$ = new Observable<Entity>();
-  public childrenRemoved$ = new Observable<Entity>();
+  public childrenAdded$: Observable<Entity> = new Observable<Entity>();
+  public childrenRemoved$: Observable<Entity> = new Observable<Entity>();
 
   private _children: Entity[] = [];
   /**
@@ -279,7 +279,7 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
   /**
    * Unparents this entity, if there is a parent. Otherwise it does nothing.
    */
-  public unparent() {
+  public unparent(): void {
     if (this._parent) {
       this._parent.removeChild(this);
       this._parent = null;

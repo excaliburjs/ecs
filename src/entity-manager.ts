@@ -49,7 +49,7 @@ export class EntityManager<TContext = any> {
    */
   public addEntity(entity: Entity): void {
     entity.isActive = true;
-    entity.scene = this._world.context;
+    entity.context = this._world.context;
     if (entity && !this._entityIndex[entity.id]) {
       this._entityIndex[entity.id] = entity;
       this.entities.push(entity);
@@ -57,7 +57,7 @@ export class EntityManager<TContext = any> {
 
       // if entity has children
       entity.children.forEach((c) => {
-        c.scene = entity.scene;
+        c.context = entity.context;
         this.addEntity(c);
       });
       const childAdded = this._createChildAddedHandler();
@@ -90,7 +90,7 @@ export class EntityManager<TContext = any> {
 
     delete this._entityIndex[id];
     if (entity) {
-      entity.scene = null;
+      entity.context = null;
       const index = this.entities.indexOf(entity);
       if (index > -1) {
         this.entities.splice(index, 1);
@@ -99,7 +99,7 @@ export class EntityManager<TContext = any> {
 
       // if entity has children
       entity.children.forEach((c) => {
-        c.scene = null;
+        c.context = null;
         this.removeEntity(c, deferred);
       });
       const childAddedHandler = this._childAddedHandlerMap.get(entity);

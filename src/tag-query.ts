@@ -3,16 +3,16 @@ import { Entity } from './entity.ts';
 
 export class TagQuery<TKnownTags extends string = never> {
   public readonly id: string;
-  public tags = new Set<TKnownTags>();
+  public tags: Set<TKnownTags> = new Set<TKnownTags>();
   public entities: Entity<any>[] = [];
   /**
    * This fires right after the component is added
    */
-  public entityAdded$ = new Observable<Entity<any>>();
+  public entityAdded$: Observable<Entity<any>> = new Observable<Entity<any>>();
   /**
    * This fires right before the component is actually removed from the entity, it will still be available for cleanup purposes
    */
-  public entityRemoved$ = new Observable<Entity<any>>();
+  public entityRemoved$: Observable<Entity<any>> = new Observable<Entity<any>>();
 
   constructor(public readonly requiredTags: TKnownTags[]) {
     if (requiredTags.length === 0) {
@@ -25,11 +25,11 @@ export class TagQuery<TKnownTags extends string = never> {
     this.id = TagQuery.createId(requiredTags);
   }
 
-  static createId(requiredComponents: string[]) {
+  static createId(requiredComponents: string[]): string {
     return requiredComponents.slice().sort().join('-');
   }
 
-  checkAndAdd(entity: Entity) {
+  checkAndAdd(entity: Entity): boolean {
     if (!this.entities.includes(entity) && entity.hasAllTags(Array.from(this.tags))) {
       this.entities.push(entity);
       this.entityAdded$.notifyAll(entity);
@@ -38,7 +38,7 @@ export class TagQuery<TKnownTags extends string = never> {
     return false;
   }
 
-  removeEntity(entity: Entity) {
+  removeEntity(entity: Entity): void {
     const index = this.entities.indexOf(entity);
     if (index > -1) {
       this.entities.splice(index, 1);

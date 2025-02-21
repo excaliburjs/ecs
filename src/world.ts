@@ -78,7 +78,7 @@ export class World<TContext = any> {
   /**
    * Get a system out of the ECS world
    */
-  get(system: SystemCtor<System>) {
+  get(system: SystemCtor<System>): System<TContext> | null {
     return this.systemManager.get(system);
   }
 
@@ -110,7 +110,7 @@ export class World<TContext = any> {
     //);
   }
 
-  get entities() {
+  get entities(): Entity<any, TContext>[] {
     return this.entityManager.entities;
   }
 

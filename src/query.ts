@@ -14,16 +14,16 @@ export type ComponentInstance<T> = T extends ComponentCtor<infer R> ? R : never;
  */
 export class Query<TKnownComponentCtors extends ComponentCtor<Component> = never> {
   public readonly id: string;
-  public components = new Set<TKnownComponentCtors>();
+  public components: Set<TKnownComponentCtors> = new Set<TKnownComponentCtors>();
   public entities: Entity<ComponentInstance<TKnownComponentCtors>>[] = [];
   /**
    * This fires right after the component is added
    */
-  public entityAdded$ = new Observable<Entity<ComponentInstance<TKnownComponentCtors>>>();
+  public entityAdded$: Observable<Entity<ComponentInstance<TKnownComponentCtors>>> = new Observable<Entity<ComponentInstance<TKnownComponentCtors>>>();
   /**
    * This fires right before the component is actually removed from the entity, it will still be available for cleanup purposes
    */
-  public entityRemoved$ = new Observable<Entity<ComponentInstance<TKnownComponentCtors>>>();
+  public entityRemoved$: Observable<Entity<ComponentInstance<TKnownComponentCtors>>> = new Observable<Entity<ComponentInstance<TKnownComponentCtors>>>();
 
   constructor(public readonly requiredComponents: TKnownComponentCtors[]) {
     if (requiredComponents.length === 0) {
@@ -36,7 +36,7 @@ export class Query<TKnownComponentCtors extends ComponentCtor<Component> = never
     this.id = Query.createId(requiredComponents);
   }
 
-  static createId(requiredComponents: Function[]) {
+  static createId(requiredComponents: Function[]): string {
     // TODO what happens if a user defines the same type name as a built in type
     // ! TODO this could be dangerous depending on the bundler's settings for names
     // Maybe some kind of hash function is better here?
@@ -51,7 +51,7 @@ export class Query<TKnownComponentCtors extends ComponentCtor<Component> = never
    * Potentially adds an entity to a query index, returns true if added, false if not
    * @param entity
    */
-  checkAndAdd(entity: Entity) {
+  checkAndAdd(entity: Entity): boolean {
     if (!this.entities.includes(entity) && entity.hasAll(Array.from(this.components))) {
       this.entities.push(entity);
       this.entityAdded$.notifyAll(entity);
@@ -60,7 +60,7 @@ export class Query<TKnownComponentCtors extends ComponentCtor<Component> = never
     return false;
   }
 
-  removeEntity(entity: Entity) {
+  removeEntity(entity: Entity): void {
     const index = this.entities.indexOf(entity);
     if (index > -1) {
       this.entities.splice(index, 1);

@@ -140,7 +140,7 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
   /**
    * The current scene that the entity is in, if any
    */
-  public scene: Scene | null = null;
+  public context: TContext | null = null;
 
   /**
    * Whether this entity is active, if set to false it will be reclaimed
@@ -310,7 +310,10 @@ export class Entity<TKnownComponents extends Component = any, TContext = any> {
    */
   public removeChild(entity: Entity): Entity {
     if (entity.parent === this) {
-      removeItemFromArray(entity, this._children);
+      const index = this._children.indexOf(entity);
+      if (index > -1) {
+        this._children.splice(index, 1);
+      }
       entity._parent = null;
       this.childrenRemoved$.notifyAll(entity);
     }
